@@ -1,39 +1,41 @@
 // https://leetcode.com/problems/course-schedule/
 
-const canFinish = (numCourses, prerequisites) => {
-  possCourses = {};
+const buildGraph = (list) => {
+  let graph = {};
 
-  // Construct the graph map
-  prerequisites.forEach(prereq => {
-    let currCourse = prereq[0];
-    if (!possCourses[currCourse]) possCourses[currCourse] = [];
-    possCourses[currCourse].push(prereq[1]);
+  list.forEach(prereq => {
+    let [course, pre] = prereq;
+    if (!graph[course]) graph[course] = [];
+    graph[course].push(pre);
+
+    // if (!graph[pre]) graph[pre] = [];
   })
 
-  // check each node in graph to see if there is a cycle through the  neighbor of that node
-  for (course in possCourses) {
-    if (hasCycle(course, possCourses, prev = new Set())) return false;
+  return graph;
+}
+
+var canFinish = function (numCourses, prerequisites) {
+  let prereq = buildGraph(prerequisites);
+
+  for (course in prereq) {
+    if (hasCycle(course, prereq, prev = new Set())) return false;
   }
 
   return true;
 };
 
-const hasCycle = (course, possCourses, prev = new Set()) => {
-  // check for sanity
+const hasCycle = (course, prereq, prev = new Set()) => {
   if (typeof course === 'undefined') return false;
   if (prev.has(String(course)) || prev.has(course)) return true;
   prev.add(course);
 
-  //get the presequite nodes
-  let prevCourses = possCourses[course];
+  let prevCourses = prereq[course];
   if (!prevCourses) return false;
 
   for (let i = 0; i < prevCourses.length; i++) {
     let currCourse = prevCourses[i];
-    // if node already visted with no cycle, bypass that node
     if (prev.has(currCourse)) continue;
-
-    if (hasCycle(currCourse, possCourses, prev)) return true;
+    if (hasCycle(currCourse, prereq, prev)) return true;
   }
   return false;
 }
