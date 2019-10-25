@@ -39,3 +39,6 @@ const hasCycle = (course, prereq, prev = new Set()) => {
   }
   return false;
 }
+
+// 2nd way
+
