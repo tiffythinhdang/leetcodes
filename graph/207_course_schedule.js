@@ -4,29 +4,30 @@ const buildGraph = (list) => {
   let graph = {};
 
   list.forEach(prereq => {
-    let [course, pre] = prereq;
+    let [course, pre] = prereq.map(String);
     if (!graph[course]) graph[course] = [];
     graph[course].push(pre);
-
-    // if (!graph[pre]) graph[pre] = [];
   })
 
   return graph;
 }
 
-var canFinish = function (numCourses, prerequisites) {
+const canFinish = (numCourses, prerequisites) => {
   let prereq = buildGraph(prerequisites);
+  let noCycleNodes = new Set();
 
-  for (course in prereq) {
-    if (hasCycle(course, prereq, prev = new Set())) return false;
+  for (let course in prereq) {
+    if (hasCycle(course, prereq, noCycleNodes)) return false;
   }
 
   return true;
 };
 
-const hasCycle = (course, prereq, prev = new Set()) => {
+const hasCycle = (course, prereq, noCycleNodes, prev = new Set()) => {
   if (typeof course === 'undefined') return false;
-  if (prev.has(String(course)) || prev.has(course)) return true;
+  if (noCycleNodes.has(course)) return false;
+
+  if (prev.has(course)) return true;
   prev.add(course);
 
   let prevCourses = prereq[course];
@@ -34,11 +35,12 @@ const hasCycle = (course, prereq, prev = new Set()) => {
 
   for (let i = 0; i < prevCourses.length; i++) {
     let currCourse = prevCourses[i];
-    if (prev.has(currCourse)) continue;
-    if (hasCycle(currCourse, prereq, prev)) return true;
+    if (hasCycle(currCourse, prereq, noCycleNodes, prev)) return true;
+    prev.delete(currCourse);
+    noCycleNodes.add(String(currCourse));
   }
+
+  noCycleNodes.add(String(course));
+  prev.delete(course);
   return false;
 }
-
-// 2nd way
-
