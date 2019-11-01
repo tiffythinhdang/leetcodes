@@ -9,21 +9,59 @@ class Node {
   }
 };
 
-const inOrderTraversal = (root) => {
-  if (!root) return [];
+// Recursively
+// const inOrderTraversal = (root) => {
+//   if (!root) return [];
+//   let order = [];
+
+//   const leftTraversal = inOrderTraversal(root.left);
+//   const rightTraversal = inOrderTraversal(root.right);
+
+//   order.concat(leftTraversal).concat([root.val]).concat(rightTraversal);
+// }
+
+// const inOrderTraversal = (root, topK = [], k) => {
+//   if (!root) return;
+
+//   inOrderTraversal(root.left, topK, k);
+//   if (topK.length === k) {
+//     return;
+//   }
+  
+//   topK.push(root.val);
+//   if (topK.length === k) {
+//     return;
+//   }
+  
+//   inOrderTraversal(root.right, topK, k);
+// }
+
+// const kthSmallest = (root, k) => {
+//   if (!root) return null;
+//   const topK = [];
+//   inOrderTraversal(root, topK, k);
+//   return topK[k - 1];
+// };
+
+// Interatively
+const kthSmallest = (root, k) => {
+  let currNode = root;
   let order = [];
+  let stack = [];
 
-  const leftTraversal = inOrderTraversal(root.left);
-  const rightTraversal = inOrderTraversal(root.right);
-
-  return order.concat(leftTraversal).concat([root.val]).concat(rightTraversal);
+  while (currNode || stack.length > 0) {
+    while (currNode) {
+      stack.push(currNode);
+      currNode = currNode.left;
+    }
+    currNode = stack.pop();
+    if (k === 1) return currNode.val;
+    order.push(currNode.val);
+    k--;
+    currNode = currNode.right;
+  }
 }
 
-const kthSmallest = (root, k) => {
-  if (!root) return null;
-  let orderAscending = inOrderTraversal(root);
-  return orderAscending[k - 1];
-};
 
 let node1 = new Node(1);
 let node2 = new Node(2);
