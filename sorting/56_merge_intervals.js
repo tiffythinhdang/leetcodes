@@ -17,3 +17,5 @@ const merge = (intervals) => {
 
   return merged;
 };
+
+
