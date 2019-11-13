@@ -1,3 +1,8 @@
+function TreeNode(val) {
+  this.val = val;
+  this.left = this.right = null;
+}
+
 // const invertTree = (root) => {
 //   if (!root) return root;
 //   let left = invertTree(root.left);
