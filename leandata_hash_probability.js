@@ -17,6 +17,9 @@ const randomKey = (hash) => {
   }
 } 
 
+const sortKey
+
+
 let hash = { "a": 1, "b": 2, "c": 5, "d": 2 }
 console.log( randomKey(hash) )
 console.log("---------")
